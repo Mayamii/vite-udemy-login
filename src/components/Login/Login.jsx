@@ -6,19 +6,25 @@ import Button from "../UI/Button/Button";
 
 // outside of Component, weil man nichts aus dem Component Scope braucht
 const emailReducer = (state, action) => {
-  if (action.type === "USER_INPUT")
+  if (action.type === "USER_INPUT") {
     return { value: action.val, isValid: action.val.includes("@") };
+  }
 
-  if (action.type === "USER_BLUR")
-    return { value: state.value, isValid: action.val.includes("@") };
+  if (action.type === "USER_BLUR") {
+    return { value: state.value, isValid: action.value.includes("@") };
+  }
+  return state;
 };
 
 const passwordReducer = (state, action) => {
-  if (action.type === "USER_INPUT")
+  if (action.type === "USER_INPUT") {
     return { value: action.val, isValid: action.val.trim().length > 6 };
+  }
 
-  if (action.type === "USER_BLUR")
-    return { value: state.value, isValid: action.val.trim().length > 6 };
+  if (action.type === "USER_BLUR") {
+    return { value: state.value, isValid: action.value.trim().length > 6 };
+  }
+  return state;
 };
 
 const Login = (props) => {
@@ -30,12 +36,12 @@ const Login = (props) => {
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
-    isValid: false,
+    isValid: null,
   });
 
   const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
     value: "",
-    isValid: false,
+    isValid: null,
   });
 
   useEffect(() => {
@@ -59,12 +65,12 @@ const Login = (props) => {
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", val: event.target.value });
-    setFormIsValid(emailState.isValid && passwordState.value.trim().length > 6);
+    setFormIsValid(emailState.isValid && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
     dispatchPassword({ type: "USER_INPUT", val: event.target.value });
-    setFormIsValid(emailState.isValid && passwordState.value.trim().length > 6);
+    setFormIsValid(emailState.isValid && passwordState.isValid);
   };
 
   const validateEmailHandler = () => {
